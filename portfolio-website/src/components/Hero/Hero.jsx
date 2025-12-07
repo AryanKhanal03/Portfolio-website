@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
 import './Hero.css';
+// Using public-served PDF to avoid hashed filenames
 
 const Hero = () => {
   return (
@@ -39,15 +40,19 @@ const Hero = () => {
                 Contact Me
               </motion.button>
             </Link>
+            <motion.a 
+              href={process.env.PUBLIC_URL + '/Cv.pdf'} 
+              className="btn" 
+              download 
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              Download CV
+            </motion.a>
           </div>
           
-          <div className="scroll-down">
-            <Link to="about" smooth={true} duration={500} spy={true} exact="true" offset={-80}>
-              <div className="mouse">
-                <div className="wheel"></div>
-              </div>
-            </Link>
-          </div>
         </motion.div>
       </div>
     </section>
