@@ -15,9 +15,9 @@ const Contact = () => {
   // Initialize EmailJS when component mounts
   // Note: We don't need explicit init() if we pass the public key to send()
   useEffect(() => {
-    const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
+    const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'Q-xJdnYfBLGorOM1w';
     if (!publicKey || publicKey === 'YOUR_PUBLIC_KEY_HERE') {
-      console.warn('⚠️ EmailJS environment variables are missing! Please update your .env file with your actual EmailJS credentials.');
+      console.warn('⚠️ EmailJS environment variables are missing!');
     }
   }, []);
 
@@ -94,12 +94,18 @@ const Contact = () => {
       setIsSubmitting(true);
       setSubmitError(false);
 
-      const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
-      const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
-      const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
+      // Use environment variables if available, otherwise fallback to provided credentials
+      const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_portfolio1';
+      const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID || 'template_qvsh5z7';
+      const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'Q-xJdnYfBLGorOM1w';
 
-      if (!serviceId || !templateId || !publicKey) {
-        alert('Configuration Error: Missing EmailJS environment variables. Please restart your server.');
+      if (!serviceId || !templateId || !publicKey || serviceId === 'YOUR_SERVICE_ID_HERE') {
+        const isProduction = process.env.NODE_ENV === 'production';
+        if (isProduction) {
+          alert('Sorry, the contact form is currently undergoing maintenance. Please reach out via email directly at khanal.aryan60@gmail.com');
+        } else {
+          alert('Configuration Error: Missing EmailJS environment variables in .env file. Please restart your server.');
+        }
         setIsSubmitting(false);
         return;
       }
