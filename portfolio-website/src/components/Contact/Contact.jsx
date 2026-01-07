@@ -17,7 +17,7 @@ const Contact = () => {
   useEffect(() => {
     const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
     if (!publicKey || publicKey === 'YOUR_PUBLIC_KEY_HERE') {
-      console.warn('⚠️ EmailJS public key is missing or invalid! Add REACT_APP_EMAILJS_PUBLIC_KEY in .env file.');
+      console.warn('⚠️ EmailJS environment variables are missing! Please update your .env file with your actual EmailJS credentials.');
     }
   }, []);
 
