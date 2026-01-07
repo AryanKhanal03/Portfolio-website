@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaCode, FaServer, FaMobile, FaDatabase, FaReact, FaJs, FaPython, FaCss3Alt, FaDatabase as FaSQL } from 'react-icons/fa';
-import { SiDart, SiFirebase, SiFlutter } from 'react-icons/si';
+import { SiFirebase, SiFlutter } from 'react-icons/si';
 import './About.css';
 
 const About = () => {

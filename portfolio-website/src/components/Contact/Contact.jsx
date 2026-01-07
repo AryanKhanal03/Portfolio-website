@@ -1,11 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import emailjs from '@emailjs/browser';
 import './Contact.css';
 
 const Contact = () => {
-  const form = useRef();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,11 +13,11 @@ const Contact = () => {
   });
 
   // Initialize EmailJS when component mounts
+  // Note: We don't need explicit init() if we pass the public key to send()
   useEffect(() => {
-    if (process.env.REACT_APP_EMAILJS_PUBLIC_KEY) {
-      emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY);
-    } else {
-      console.warn('⚠️ EmailJS public key is missing! Add REACT_APP_EMAILJS_PUBLIC_KEY in .env file.');
+    const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
+    if (!publicKey || publicKey === 'YOUR_PUBLIC_KEY_HERE') {
+      console.warn('⚠️ EmailJS public key is missing or invalid! Add REACT_APP_EMAILJS_PUBLIC_KEY in .env file.');
     }
   }, []);
 
@@ -75,11 +74,17 @@ const Contact = () => {
   };
 
   const sanitizeInput = (input) => {
-    // Remove script tags and encode special characters
-    return input.replace(/<script.*?>.*?<\/script>/gi, '')
-      .replace(/[&<>"]/g, function (c) {
-        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
-      });
+    if (typeof input !== 'string') return input;
+    // Remove script tags and encode special characters to prevent XSS
+    return input
+      .replace(/<script.*?>.*?<\/script>/gi, '')
+      .replace(/[&<>"]/g, (c) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[c]));
   };
 
   const handleSubmit = (e) => {
@@ -88,21 +93,37 @@ const Contact = () => {
     if (validateForm()) {
       setIsSubmitting(true);
       setSubmitError(false);
+
+      const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
+      const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
+
+      if (!serviceId || !templateId || !publicKey) {
+        alert('Configuration Error: Missing EmailJS environment variables. Please restart your server.');
+        setIsSubmitting(false);
+        return;
+      }
   
       // Direct email configuration with template variables matching EmailJS template
       const templateParams = {
         name: sanitizeInput(formData.name),
         email: sanitizeInput(formData.email),
-        title: sanitizeInput(formData.subject),
+        subject: sanitizeInput(formData.subject),
         message: sanitizeInput(formData.message),
+        // Fallbacks for common EmailJS naming conventions
+        from_name: sanitizeInput(formData.name),
+        reply_to: sanitizeInput(formData.email),
+        user_subject: sanitizeInput(formData.subject),
+        user_message: sanitizeInput(formData.message),
+        title: sanitizeInput(formData.subject), // Added 'title' as a fallback
       };
       
       // Using emailjs.send directly with form data
       emailjs.send(
-        process.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_portfolio',
-        process.env.REACT_APP_EMAILJS_TEMPLATE_ID || 'template_qvsh5z7',
+        serviceId,
+        templateId,
         templateParams,
-        process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+        publicKey
       )
         .then((response) => {
           console.log('✅ Email sent successfully!', response);
@@ -122,6 +143,13 @@ const Contact = () => {
           console.error('❌ Failed to send email:', error);
           setIsSubmitting(false);
           setSubmitError(true);
+          
+          const errorMessage = error?.text || error?.message || 'Unknown error';
+          if (errorMessage.includes('Failed to fetch')) {
+             alert('Network Error: "Failed to fetch". This is often caused by an Ad Blocker or security policy. Please disable ad blockers and try again.');
+          } else {
+             alert(`Failed to send: ${errorMessage}`);
+          }
 
           // Reset error message after 5 seconds
           setTimeout(() => setSubmitError(false), 5000);
