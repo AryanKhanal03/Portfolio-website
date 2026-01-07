@@ -161,7 +161,7 @@ const Contact = () => {
     <section id="contact" className="contact section">
       <div className="container">
         <div className="section-title">
-          <h2>Contact Me</h2>
+          <h2>Get In Touch</h2>
         </div>
 
         <div className="contact-content">
@@ -172,15 +172,16 @@ const Contact = () => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h3>Get In Touch</h3>
+            <h3 className="section-subtitle">Let's Talk</h3>
             <p>
-              I'm interested in freelance opportunities – especially ambitious or large projects.
-              However, if you have other requests or questions, don't hesitate to contact me.
+              I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.
             </p>
 
             <div className="contact-details">
               <div className="contact-item">
-                <div className="icon"><FaEnvelope /></div>
+                <div className="icon-wrapper glass">
+                  <FaEnvelope className="icon" />
+                </div>
                 <div className="text">
                   <h4>Email</h4>
                   <p>khanal.aryan60@gmail.com</p>
@@ -188,7 +189,9 @@ const Contact = () => {
               </div>
 
               <div className="contact-item">
-                <div className="icon"><FaPhone /></div>
+                <div className="icon-wrapper glass">
+                  <FaPhone className="icon" />
+                </div>
                 <div className="text">
                   <h4>Phone</h4>
                   <p>+977 9864478471</p>
@@ -196,7 +199,9 @@ const Contact = () => {
               </div>
 
               <div className="contact-item">
-                <div className="icon"><FaMapMarkerAlt /></div>
+                <div className="icon-wrapper glass">
+                  <FaMapMarkerAlt className="icon" />
+                </div>
                 <div className="text">
                   <h4>Location</h4>
                   <p>Kathmandu, Nepal</p>
@@ -206,7 +211,7 @@ const Contact = () => {
           </motion.div>
 
           <motion.div
-            className="contact-form-container"
+            className="contact-form-container glass"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
@@ -214,13 +219,10 @@ const Contact = () => {
           >
             {submitSuccess ? (
               <div className="success-message">
-                <h3>Thank you!</h3>
-                <p>Your message has been sent successfully. I'll get back to you soon.</p>
-              </div>
-            ) : submitError ? (
-              <div className="error-message">
-                <h3>Oops!</h3>
-                <p>Something went wrong. Please try again later or contact me directly via email.</p>
+                <div className="success-icon">✓</div>
+                <h3>Message Sent!</h3>
+                <p>Thank you for reaching out. I'll get back to you as soon as possible.</p>
+                <button className="btn primary-btn" onClick={() => setSubmitSuccess(false)}>Send Another</button>
               </div>
             ) : (
               <form className="contact-form" onSubmit={handleSubmit}>
@@ -233,9 +235,8 @@ const Contact = () => {
                     onChange={handleChange}
                     className={errors.name ? 'error' : ''}
                   />
-                  {errors.name && <span className="error-message">{errors.name}</span>}
+                  {errors.name && <span className="error-text">{errors.name}</span>}
                 </div>
-
                 <div className="form-group">
                   <input
                     type="email"
@@ -245,9 +246,8 @@ const Contact = () => {
                     onChange={handleChange}
                     className={errors.email ? 'error' : ''}
                   />
-                  {errors.email && <span className="error-message">{errors.email}</span>}
+                  {errors.email && <span className="error-text">{errors.email}</span>}
                 </div>
-
                 <div className="form-group">
                   <input
                     type="text"
@@ -257,24 +257,23 @@ const Contact = () => {
                     onChange={handleChange}
                     className={errors.subject ? 'error' : ''}
                   />
-                  {errors.subject && <span className="error-message">{errors.subject}</span>}
+                  {errors.subject && <span className="error-text">{errors.subject}</span>}
                 </div>
-
                 <div className="form-group">
                   <textarea
                     name="message"
                     placeholder="Your Message"
+                    rows="5"
                     value={formData.message}
                     onChange={handleChange}
                     className={errors.message ? 'error' : ''}
-                    rows="6"
                   ></textarea>
-                  {errors.message && <span className="error-message">{errors.message}</span>}
+                  {errors.message && <span className="error-text">{errors.message}</span>}
                 </div>
 
                 <button
                   type="submit"
-                  className="btn"
+                  className={`btn primary-btn ${isSubmitting ? 'loading' : ''}`}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}

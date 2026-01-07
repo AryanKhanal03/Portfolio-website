@@ -1,8 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaCode, FaServer, FaMobile, FaDatabase, FaReact, FaJs, FaPython, FaCss3Alt, FaDatabase as FaSQL } from 'react-icons/fa';
+import { FaCode, FaServer, FaMobile, FaReact, FaJs, FaPython, FaCss3Alt, FaDatabase as FaSQL } from 'react-icons/fa';
 import { SiFirebase, SiFlutter } from 'react-icons/si';
 import './About.css';
+import myPhoto from '../../assets/MyPhoto.jpeg';
 
 const About = () => {
   const skills = [
@@ -45,7 +46,7 @@ const About = () => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <img src={require('../../assets/MyPhoto.jpeg')} alt="Aryan Khanal" />
+            <img src={myPhoto} alt="Aryan Khanal" />
           </motion.div>
         </div>
 
@@ -56,13 +57,20 @@ const About = () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h3>My Skills</h3>
+          <h3 className="section-subtitle">Technical Skills</h3>
           <div className="skills-grid">
             {skills.map((skill, index) => (
-              <div className="skill" key={index}>
-                <div className="skill-name">
-                  <span className="skill-icon">{skill.icon}</span>
-                  {skill.name}
+              <motion.div 
+                className="skill-card glass" 
+                key={index}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              >
+                <div className="skill-info">
+                  <div className="skill-name">
+                    <span className="skill-icon">{skill.icon}</span>
+                    {skill.name}
+                  </div>
+                  <span className="skill-percentage">{skill.level}%</span>
                 </div>
                 <div className="skill-bar">
                   <motion.div 
@@ -73,8 +81,7 @@ const About = () => {
                     viewport={{ once: true }}
                   ></motion.div>
                 </div>
-                <div className="skill-percentage">{skill.level}%</div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>
@@ -86,36 +93,38 @@ const About = () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h3>My Expertise</h3>
+          <h3 className="section-subtitle">My Expertise</h3>
           <div className="services-grid">
-            <div className="service-card">
+            <motion.div 
+              className="service-card glass"
+              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+            >
               <div className="service-icon">
                 <FaCode />
               </div>
               <h4>Frontend Development</h4>
-              <p>Creating responsive and interactive user interfaces with modern frameworks like React.</p>
-            </div>
-            <div className="service-card">
-              <div className="service-icon">
-                <FaServer />
-              </div>
-              <h4>Backend Development</h4>
-              <p>Building robust server-side applications and APIs using Python (with frameworks such as Flask or Django).</p>
-            </div>
-            <div className="service-card">
+              <p>Creating responsive and interactive user interfaces with modern frameworks like React and Next.js.</p>
+            </motion.div>
+            <motion.div 
+              className="service-card glass"
+              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+            >
               <div className="service-icon">
                 <FaMobile />
               </div>
-              <h4>Responsive Design</h4>
-              <p>Ensuring applications work flawlessly across all devices and screen sizes.</p>
-            </div>
-            <div className="service-card">
+              <h4>App Development</h4>
+              <p>Building cross-platform mobile applications using Flutter and Dart for seamless user experiences.</p>
+            </motion.div>
+            <motion.div 
+              className="service-card glass"
+              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+            >
               <div className="service-icon">
-                <FaDatabase />
+                <FaServer />
               </div>
-              <h4>Database Design</h4>
-              <p>Designing and optimizing database schemas for efficient data management.</p>
-            </div>
+              <h4>Backend & DB</h4>
+              <p>Developing robust server-side logic and managing databases with Python, SQL, and Firebase.</p>
+            </motion.div>
           </div>
         </motion.div>
       </div>
